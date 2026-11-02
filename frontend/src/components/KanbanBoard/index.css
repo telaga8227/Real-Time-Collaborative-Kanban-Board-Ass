@@ -1,0 +1,95 @@
+.workspace-header {
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.btn-back {
+    padding: 6px 12px;
+    background-color: white;
+    border: 1px solid #ccd1d9;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 13px;
+}
+
+.tenant-badge {
+    background-color: #e6effc;
+    color: #0052cc;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.kanban-scrollway {
+    display: flex;
+    gap: 20px;
+    overflow-x: auto;
+    padding-bottom: 15px;
+    align-items: flex-start;
+}
+
+.kanban-column {
+    background-color: #ebecf0;
+    border-radius: 6px;
+    width: 300px;
+    padding: 12px;
+    flex-shrink: 0;
+}
+
+.column-title-bar {
+    font-weight: bold;
+    padding: 0 4px 12px 4px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.task-card {
+    background-color: #ffffff;
+    padding: 14px;
+    border-radius: 4px;
+    box-shadow: 0 1px 2px rgba(9, 30, 66, 0.2);
+    margin-bottom: 8px;
+}
+
+.task-meta {
+    margin-top: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.version-tag {
+    font-size: 11px;
+    background-color: #deebff;
+    color: #0747a6;
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-weight: bold;
+}
+
+.btn-shift {
+    padding: 2px 5px;
+    font-size: 11px;
+    cursor: pointer;
+    border: 1px solid #ccd1d9;
+    background-color: #f4f5f7;
+    border-radius: 3px;
+    margin-left: 3px;
+}
+
+.task-entry-form {
+    margin-top: 10px;
+    display: flex;
+    gap: 5px;
+}
+
+.task-entry-input {
+    padding: 6px;
+    font-size: 12px;
+    border: 1px solid #ccd1d9;
+    border-radius: 3px;
+    flex-grow: 1;
+}

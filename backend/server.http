@@ -1,0 +1,109 @@
+@baseUrl = http://localhost:5000/api
+@tenantHyd = tenant-hyd
+@tenantBlr = tenant-blr
+@userAnish = usr-001
+@userSana = usr-002
+
+###
+# TEST CASE 1: FETCH BOARDS (SUCCESS - AUTHORIZED TENANT ACCESS)
+# Description: Fetches boards for 'Hyderabad Engineering Branch' as Anish (Tenant Admin).
+GET {{baseUrl}}/boards
+x-tenant-id: {{tenantHyd}}
+x-user-id: {{userAnish}}
+
+###
+# TEST CASE 2: FETCH BOARDS (FAIL - UNAUTHORIZED TENANT ISOLATION)
+# Description: Attempts to fetch Hyderabad boards using Sana's credentials 
+# (who is only authorized for the Bangalore Branch). Should return a 403 Forbidden status.
+GET {{baseUrl}}/boards
+x-tenant-id: {{tenantHyd}}
+x-user-id: {{userSana}}
+
+###
+# TEST CASE 3: CREATE A NEW MULTI-TENANT KANBAN BOARD
+POST {{baseUrl}}/boards
+x-tenant-id: {{tenantHyd}}
+x-user-id: {{userAnish}}
+Content-Type: application/json
+
+{
+    "id": "board-2026-roadmap",
+    "organization_id": "org-101",
+    "name": "2026 Core Platform Upgrades",
+    "description": "Scoping out multi-tenant database indexing and security audits."
+}
+
+###
+# TEST CASE 4: FETCH WORKFLOW COLUMNS
+GET {{baseUrl}}/boards/board-q4/columns
+x-tenant-id: {{tenantHyd}}
+x-user-id: {{userAnish}}
+
+###
+# TEST CASE 5: FETCH CURRENT KANBAN TASKS
+GET {{baseUrl}}/boards/board-q4/tasks
+x-tenant-id: {{tenantHyd}}
+x-user-id: {{userAnish}}
+
+###
+# TEST CASE 6: CREATE A NEW TASK
+POST {{baseUrl}}/tasks
+x-tenant-id: {{tenantHyd}}
+x-user-id: {{userAnish}}
+Content-Type: application/json
+
+{
+    "id": "task-003",
+    "board_id": "board-q4",
+    "column_id": "col-todo",
+    "title": "Validate REST API Client Configurations",
+    "description": "Send test endpoints to verify tenant boundary safety restrictions.",
+    "assigned_to": "usr-001",
+    "position": 2
+
+}
+
+###
+# TEST CASE 7: UPDATE TASK (SUCCESS - VERSION MATCHES)
+# Description: Updates task title. Sends current_version = 1. 
+# The server checks the database, finds version 1, updates it, and increments it to 2.
+PUT {{baseUrl}}/tasks/task-001
+x-tenant-id: {{tenantHyd}}
+x-user-id: {{userAnish}}
+Content-Type: application/json
+
+{
+    "title": "Setup Express Middleware Security Layers",
+    "description": "Implement tenant routing security strategies.",
+    "column_id": "col-todo",
+    "position": 1,
+    "current_version": 1
+}
+
+###
+
+# TEST CASE 8: UPDATE TASK (FAIL - CONCURRENCY VERSION MISMATCH)
+
+# Description: Attempts to update the same task using an outdated version index (version 1 again).
+# Since Test Case 7 bumped it to version 2, this request should trigger a 409 Conflict status.
+PUT {{baseUrl}}/tasks/task-001
+x-tenant-id: {{tenantHyd}}
+x-user-id: {{userAnish}}
+Content-Type: application/json
+
+{
+    "title": "Simulated Stale Conflict Update",
+    "description": "This request should fail because it uses an obsolete version payload.",
+    "column_id": "col-todo",
+    "position": 1,
+    "current_version": 1
+}
+
+###
+
+# TEST CASE 9: READ SECURITY AUDIT LOGS (ADMIN PRIVILEGES REQ.)
+
+# Description: Fetches tracking streams as an Org Admin role.
+GET {{baseUrl}}/audit-logs
+x-tenant-id: {{tenantHyd}}
+x-user-id: {{userAnish}}
